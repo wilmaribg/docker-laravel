@@ -1,0 +1,44 @@
+version: '3'
+services:
+  ubuntu-ops:
+    build: .
+    networks: 
+      - "ops"
+    container_name: "ubuntu-ops"
+    volumes:
+      - "./ops:/ops"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8000:8000"
+    expose:
+      - '80'
+      - '443'
+      - '8000'
+    depends_on:
+      - "db"
+    entrypoint: "./ops/entrypoint.sh"
+    # logging:
+      # driver: syslog
+      # options:
+        # tag: php
+    # stdin_open: true
+    # tty: true
+  db:
+    image: mysql
+    container_name: "mysql-ops"
+    networks: 
+      - "ops"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - "./my-db:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+networks:
+  ops:
+    driver: bridge
