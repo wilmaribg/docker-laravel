@@ -1,4 +1,4 @@
-/my-db
+/my-db/*
 /ops/logs/*
 /node_modules
 /public/hot
